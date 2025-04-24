@@ -11,7 +11,7 @@ import UIKit
 final class InputTextFieldView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
-//        label.font = Fonts.titleSmall()
+        label.font = Fonts.labelMedium()
         label.textColor = Colors.textHeading
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -21,7 +21,7 @@ final class InputTextFieldView: UIView {
         let field = UITextField()
         field.backgroundColor = Colors.backgroundTertiary
         field.textColor = Colors.textLabel
-//        field.font = Fonts.paragraphMedium()
+        field.font = Fonts.paragraphMedium()
         field.layer.cornerRadius = 8
         field.layer.borderWidth = 1
         field.layer.borderColor = Colors.borderPrimary.cgColor
@@ -69,8 +69,8 @@ final class InputTextFieldView: UIView {
         textField.attributedPlaceholder = NSAttributedString(
             string: placeholder,
             attributes: [
-                .foregroundColor: Colors.textPlaceholder
-//                .font: Fonts.paragraphSmall()
+                .foregroundColor: Colors.textPlaceholder,
+                .font: Fonts.paragraphSmall()
             ]
         )
         textField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
