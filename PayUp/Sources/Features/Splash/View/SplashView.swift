@@ -24,7 +24,7 @@ final class SplashView: UIView {
         return imageView
     }()
     
-    let example = InputTextFieldView(title: "CNPJ", placeholder: "CNPJ")
+    let example = AuthenticationView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -48,6 +48,12 @@ final class SplashView: UIView {
         logoImageView.center = center
         logoImageView.bounds.size = CGSize(width: 100, height: 100)
         
-        example.frame = CGRect(x: 32, y: bounds.height - 200, width: bounds.width - 70, height: 60)
+        example.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            example.centerXAnchor.constraint(equalTo: centerXAnchor),
+            example.centerYAnchor.constraint(equalTo: centerYAnchor),
+            example.widthAnchor.constraint(equalToConstant: 343),
+            example.heightAnchor.constraint(equalToConstant: 606)
+        ])
     }
 }
