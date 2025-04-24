@@ -24,6 +24,8 @@ final class SplashView: UIView {
         return imageView
     }()
     
+    let example = InputTextFieldView(title: "CNPJ", placeholder: "CNPJ")
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -37,6 +39,7 @@ final class SplashView: UIView {
         backgroundColor = Colors.backgroundPrimary
         addSubview(triangleImageView)
         addSubview(logoImageView)
+        addSubview(example)
     }
     
     override func layoutSubviews() {
@@ -44,5 +47,7 @@ final class SplashView: UIView {
         triangleImageView.frame = bounds
         logoImageView.center = center
         logoImageView.bounds.size = CGSize(width: 100, height: 100)
+        
+        example.frame = CGRect(x: 32, y: bounds.height - 200, width: bounds.width - 70, height: 60)
     }
 }

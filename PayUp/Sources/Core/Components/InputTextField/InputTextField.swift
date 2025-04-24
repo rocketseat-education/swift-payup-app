@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-final class CustomTextFieldView: UIView {
+final class InputTextFieldView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
 //        label.font = Fonts.titleSmall()
@@ -34,6 +34,7 @@ final class CustomTextFieldView: UIView {
     
     init(title: String, placeholder: String, type: InputTextFieldType = .normal) {
         self.type = type
+        self.titleLabel.text = title
         super.init(frame: .zero)
         setupView(placeholder: placeholder)
     }
@@ -68,8 +69,8 @@ final class CustomTextFieldView: UIView {
         textField.attributedPlaceholder = NSAttributedString(
             string: placeholder,
             attributes: [
-                .foregroundColor: Colors.textPlaceholder,
-                .font: Fonts.paragraphSmall()
+                .foregroundColor: Colors.textPlaceholder
+//                .font: Fonts.paragraphSmall()
             ]
         )
         textField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
@@ -85,5 +86,34 @@ final class CustomTextFieldView: UIView {
             case .cnpj:
                 maskCNPJ()
         }
+    }
+    
+    private func maskPhoneNumber() {
+        guard let text = textField.text else { return }
+        let cleanPhoneNumber = text.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+        let mask = "(##) #####-####"
+        textField.text = applyMask(mask: mask, to: cleanPhoneNumber)
+    }
+    
+    private func maskCNPJ() {
+        guard let text = textField.text else { return }
+        let cleanCNPJ = text.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+        let mask = "##.###.###/####-##"
+        textField.text = applyMask(mask: mask, to: cleanCNPJ)
+    }
+    
+    private func applyMask(mask: String, to value: String) -> String {
+        var result = ""
+        var index = value.startIndex
+        for ch in mask where index < value.endIndex {
+            if ch == "#" {
+                result.append(value[index])
+                index = value.index(after: index)
+            } else {
+                result.append(ch)
+            }
+        }
+        
+        return result
     }
 }
