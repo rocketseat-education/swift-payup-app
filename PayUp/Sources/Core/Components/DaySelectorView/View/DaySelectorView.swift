@@ -64,6 +64,7 @@ final class DaySelectorView: UIView {
             button.setTitleColor(Colors.textHeading, for: .normal)
             button.backgroundColor = Colors.backgroundTertiary
             button.titleLabel?.font = Fonts.titleExtraSmall()
+            button.translatesAutoresizingMaskIntoConstraints = false
             button.layer.cornerRadius = 6
             button.layer.borderWidth = 1
             button.layer.borderColor = UIColor.clear.cgColor
