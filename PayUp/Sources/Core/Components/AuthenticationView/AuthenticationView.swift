@@ -49,9 +49,14 @@ final class AuthenticationView: UIView {
         return imageView
     }()
     
+    private let ellipse1 = UIImageView(image: UIImage(named: "Ellipse1"))
+    private let ellipse2 = UIImageView(image: UIImage(named: "Ellipse2"))
+    private let ellipse3 = UIImageView(image: UIImage(named: "Ellipse3"))
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
+        animateEllipses()
     }
     
     required init?(coder: NSCoder) {
@@ -64,11 +69,18 @@ final class AuthenticationView: UIView {
         addSubview(titleLabel)
         addSubview(descriptionLabel)
         addSubview(faceIdIcon)
+        addSubview(ellipse1)
+        addSubview(ellipse2)
+        addSubview(ellipse3)
         
         setupConstraints()
     }
     
     private func setupConstraints() {
+        ellipse1.translatesAutoresizingMaskIntoConstraints = false
+        ellipse2.translatesAutoresizingMaskIntoConstraints = false
+        ellipse3.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
             backgroundView.topAnchor.constraint(equalTo: topAnchor),
             backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -89,6 +101,23 @@ final class AuthenticationView: UIView {
             faceIdIcon.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 40),
             faceIdIcon.widthAnchor.constraint(equalToConstant: 40),
             faceIdIcon.heightAnchor.constraint(equalToConstant: 40),
+            
+            ellipse1.centerXAnchor.constraint(equalTo: faceIdIcon.centerXAnchor),
+            ellipse1.centerYAnchor.constraint(equalTo: faceIdIcon.centerYAnchor),
+            ellipse2.centerXAnchor.constraint(equalTo: faceIdIcon.centerXAnchor),
+            ellipse2.centerYAnchor.constraint(equalTo: faceIdIcon.centerYAnchor),
+            ellipse3.centerXAnchor.constraint(equalTo: faceIdIcon.centerXAnchor),
+            ellipse3.centerYAnchor.constraint(equalTo: faceIdIcon.centerYAnchor),
         ])
+    }
+    
+    private func animateEllipses() {
+        let ellipses = [ellipse3, ellipse2, ellipse1]
+        for (index, ellipse) in ellipses.enumerated() {
+            ellipse.alpha = 0
+            UIView.animate(withDuration: 1.0, delay: Double(index) * 0.4, options: [.repeat, .autoreverse]) {
+                ellipse.alpha = 0.15
+            }
+        }
     }
 }
