@@ -32,6 +32,7 @@ final class DaySelectorView: UIView {
         super.init(frame: frame)
         setupView()
         setupButtons()
+        updateSelection(index: viewModel.selectedIndex)
     }
     
     required init?(coder: NSCoder) {
@@ -40,7 +41,7 @@ final class DaySelectorView: UIView {
     
     private func setupView() {
         addSubview(scrollView)
-        addSubview(stackView)
+        scrollView.addSubview(stackView)
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: topAnchor),
@@ -52,6 +53,7 @@ final class DaySelectorView: UIView {
             stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            stackView.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
         ])
     }
     
@@ -64,18 +66,37 @@ final class DaySelectorView: UIView {
             configuration.cornerStyle = .fixed
             configuration.contentInsets = .zero
             
+            configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+                var outgoing = incoming
+                outgoing.font = Fonts.titleExtraSmall()
+                return outgoing
+            }
+            
             let button = UIButton(configuration: configuration, primaryAction: nil)
             button.translatesAutoresizingMaskIntoConstraints = false
             button.layer.cornerRadius = 6
             button.layer.borderWidth = 1
             button.layer.borderColor = UIColor.clear.cgColor
-            button.titleLabel?.font = Fonts.titleExtraSmall()
             button.heightAnchor.constraint(equalToConstant: 32).isActive = true
             button.widthAnchor.constraint(greaterThanOrEqualToConstant: 48).isActive = true
             button.tag = index
-//            button.addTarget(self, action: #selector(dayTapped(_:)), for: .touchUpInside)
+            button.addTarget(self, action: #selector(dayTapped(_:)), for: .touchUpInside)
             buttons.append(button)
             stackView.addArrangedSubview(button)
+        }
+    }
+    
+    @objc
+    private func dayTapped(_ sender: UIButton) {
+        updateSelection(index: sender.tag)
+        viewModel.selectDay(at: sender.tag)
+    }
+    
+    private func updateSelection(index: Int) {
+        for (i, button) in buttons.enumerated() {
+            let isSelected = (i == index)
+            button.configuration?.baseForegroundColor = isSelected ? Colors.accentBrand : Colors.textHeading
+            button.layer.borderColor = isSelected ? Colors.accentBrand.cgColor : UIColor.clear.cgColor
         }
     }
 }
