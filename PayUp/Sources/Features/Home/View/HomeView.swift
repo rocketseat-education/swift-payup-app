@@ -39,6 +39,8 @@ final class HomeView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
+        
+        setupPaymentCard()
     }
     
     required init?(coder: NSCoder) {
@@ -84,5 +86,7 @@ final class HomeView: UIView {
         ])
     }
     
-    
+    private func setupPaymentCard() {
+        paymentCardView.configure(name: "Aurora Tech Soluções Digitais", value: "R$ 250,00")
+    }
 }
