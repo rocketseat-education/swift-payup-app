@@ -16,6 +16,14 @@ final class HomeView: UIView {
         return imageView
     }()
     
+    let bellButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(named: "bell"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = Colors.textHeading
+        return button
+    }()
+    
     let profileImage: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "profileImage"))
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -38,6 +46,7 @@ final class HomeView: UIView {
         backgroundColor = Colors.backgroundPrimary
         addSubview(logoImage)
         addSubview(profileImage)
+        addSubview(bellButton)
         
         NSLayoutConstraint.activate([
             logoImage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: -24),
@@ -48,7 +57,12 @@ final class HomeView: UIView {
             profileImage.centerYAnchor.constraint(equalTo: logoImage.centerYAnchor),
             profileImage.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
             profileImage.heightAnchor.constraint(equalToConstant: 44),
-            profileImage.widthAnchor.constraint(equalToConstant: 44)
+            profileImage.widthAnchor.constraint(equalToConstant: 44),
+            
+            bellButton.centerYAnchor.constraint(equalTo: logoImage.centerYAnchor),
+            bellButton.trailingAnchor.constraint(equalTo: profileImage.leadingAnchor, constant: -24),
+            bellButton.heightAnchor.constraint(equalToConstant: 24),
+            bellButton.widthAnchor.constraint(equalToConstant: 24),
         ])
     }
     
