@@ -16,6 +16,13 @@ final class HomeView: UIView {
         return imageView
     }()
     
+    let mockCompanies = [
+        CompanyItemModel(name: "Aurora Tech Soluções Digitais"),
+        CompanyItemModel(name: "Veltrix Labs"),
+        CompanyItemModel(name: "Rocketseat"),
+        CompanyItemModel(name: "ApertaAi Replays"),
+    ]
+    
     let bellButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "bell"), for: .normal)
@@ -55,8 +62,12 @@ final class HomeView: UIView {
         addSubview(daySelectorView)
         addSubview(paymentCardView)
         
+        let companyListView = CompanyListView(companies: mockCompanies)
+        addSubview(companyListView)
+        
         daySelectorView.translatesAutoresizingMaskIntoConstraints = false
         paymentCardView.translatesAutoresizingMaskIntoConstraints = false
+        companyListView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             logoImage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: -24),
@@ -83,7 +94,16 @@ final class HomeView: UIView {
             paymentCardView.leadingAnchor.constraint(equalTo: daySelectorView.leadingAnchor),
             paymentCardView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
             paymentCardView.heightAnchor.constraint(equalToConstant: 95),
+            
+            companyListView.topAnchor.constraint(equalTo: paymentCardView.bottomAnchor, constant: 24),
+            companyListView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
+            companyListView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            companyListView.heightAnchor.constraint(equalToConstant: 141)
         ])
+    }
+    
+    private func setupCollectionView() {
+        // vai ser aqui no futuro
     }
     
     private func setupPaymentCard() {

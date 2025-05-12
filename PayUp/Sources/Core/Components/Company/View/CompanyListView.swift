@@ -23,7 +23,7 @@ final class CompanyListView: UIView {
         collectionView.register(CompanyCell.self, forCellWithReuseIdentifier: CompanyCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
-    }
+    }()
     
     init(companies: [CompanyItemModel]) {
         self.viewModel = CompanyViewModel(companies: companies)
@@ -43,5 +43,26 @@ final class CompanyListView: UIView {
             collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
+    }
+}
+
+extension CompanyListView: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return viewModel.companies.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CompanyCell.identifier, for: indexPath) as? CompanyCell else {
+            return UICollectionViewCell()
+        }
+        
+        cell.configure(with: viewModel.companies[indexPath.item])
+        return cell
+    }
+}
+
+extension CompanyListView: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 128, height: 141)
     }
 }
