@@ -53,9 +53,9 @@ final class HomeView: UIView {
     }()
     
     let paymentCardView: PaymentCardView = {
-        let view = PaymentCardView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+        let card = PaymentCardView()
+        card.translatesAutoresizingMaskIntoConstraints = false
+        return card
     }()
     
     let todayLabel: UILabel = {
@@ -95,6 +95,14 @@ final class HomeView: UIView {
         return label
     }()
     
+    private let viewAllButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Filtrar", for: .normal)
+        button.titleLabel?.font = Fonts.titleSmall()
+        button.setTitleColor(Colors.accentBrand, for: .normal)
+        return button
+    }()
+    
     private let filterButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Filtrar", for: .normal)
@@ -107,6 +115,12 @@ final class HomeView: UIView {
         button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -4)
         button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
         return button
+    }()
+    
+    private let transactionCardView: PaymentCardView = {
+        let card = PaymentCardView()
+        card.translatesAutoresizingMaskIntoConstraints = false
+        return card
     }()
     
     private let companyListView: CompanyListView = {
@@ -134,22 +148,34 @@ final class HomeView: UIView {
     
     private func setupView() {
         backgroundColor = Colors.backgroundPrimary
-        addSubview(logoImage)
-        addSubview(profileImage)
-        addSubview(bellButton)
-        addSubview(daySelectorView)
-        addSubview(paymentCardView)
-        
-        let companyListView = CompanyListView(companies: mockCompanies)
-        addSubview(companyListView)
-        
-        daySelectorView.translatesAutoresizingMaskIntoConstraints = false
-        paymentCardView.translatesAutoresizingMaskIntoConstraints = false
-        companyListView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(scrollView)
+        scrollView.addSubview(contentView)
+//        addSubview(logoImage)
+//        addSubview(profileImage)
+//        addSubview(bellButton)
+//        addSubview(daySelectorView)
+//        addSubview(paymentCardView)
+//        
+//        let companyListView = CompanyListView(companies: mockCompanies)
+//        addSubview(companyListView)
         
         NSLayoutConstraint.activate([
-            logoImage.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: -24),
-            logoImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
+            scrollView.topAnchor.constraint(equalTo: topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+        ])
+        
+        setupViewsOnScroll()
+        
+        NSLayoutConstraint.activate([
+            logoImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -24),
+            logoImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
             logoImage.heightAnchor.constraint(equalToConstant: 24),
             logoImage.widthAnchor.constraint(equalToConstant: 82),
             
@@ -164,20 +190,66 @@ final class HomeView: UIView {
             bellButton.widthAnchor.constraint(equalToConstant: 24),
             
             daySelectorView.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 55),
-            daySelectorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
-            daySelectorView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            daySelectorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
+            daySelectorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             daySelectorView.heightAnchor.constraint(equalToConstant: 32),
             
+            todayLabel.topAnchor.constraint(equalTo: daySelectorView.bottomAnchor, constant: 24),
+            todayLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
+            
             paymentCardView.topAnchor.constraint(equalTo: daySelectorView.bottomAnchor, constant: 20),
-            paymentCardView.leadingAnchor.constraint(equalTo: daySelectorView.leadingAnchor),
-            paymentCardView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
+            paymentCardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            paymentCardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
             paymentCardView.heightAnchor.constraint(equalToConstant: 95),
+            
+            addClientsButton.topAnchor.constraint(equalTo: paymentCardView.bottomAnchor, constant: 24),
+            addClientsButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
+            addClientsButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
+            addClientsButton.heightAnchor.constraint(equalToConstant: 48),
+            
+            viewAllButton.topAnchor.constraint(equalTo: addClientsButton.bottomAnchor, constant: 24),
+            viewAllButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
+            viewAllButton.heightAnchor.constraint(equalToConstant: 24),
             
             companyListView.topAnchor.constraint(equalTo: paymentCardView.bottomAnchor, constant: 24),
             companyListView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
             companyListView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            companyListView.heightAnchor.constraint(equalToConstant: 141)
+            companyListView.heightAnchor.constraint(equalToConstant: 141),
+            
+            transactionLabel.topAnchor.constraint(equalTo: companyListView.bottomAnchor, constant: 24),
+            transactionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
+            
+            filterButton.centerYAnchor.constraint(equalTo: transactionLabel.centerYAnchor),
+            filterButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
+            filterButton.heightAnchor.constraint(equalToConstant: 44),
+            
+            transactionDateLabel.topAnchor.constraint(equalTo: transactionLabel.bottomAnchor, constant: 16),
+            transactionDateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
+            
+            transactionCardView.topAnchor.constraint(equalTo: transactionDateLabel.bottomAnchor, constant: 8),
+            transactionCardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
+            transactionCardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
+            transactionCardView.heightAnchor.constraint(equalToConstant: 95)
         ])
+    }
+    
+    private func setupViewsOnScroll() {
+        let views: [UIView] = [
+            logoImage,
+            bellButton,
+            profileImage,
+            daySelectorView,
+            todayLabel,
+            paymentCardView,
+            addClientsButton,
+            viewAllButton,
+            companyListView,
+            transactionLabel,
+            filterButton,
+            transactionDateLabel,
+            transactionCardView
+        ]
+        views.forEach { contentView.addSubview($0) }
     }
     
     private func setupCollectionView() {
@@ -185,7 +257,11 @@ final class HomeView: UIView {
     }
     
     private func setupPaymentCard() {
-        let transactionModel = PaymentCardModel(type: .transaction, name: "Aurora Tech Soluções Digitais", value: "R$ 250,00")
-        paymentCardView.configure(with: transactionModel)
+        paymentCardView.configure(with: .init(type: .incoming,
+                                              name: "Aurora Tech Soluções Digitais",
+                                              value: "R$ 250,00"))
+        transactionCardView.configure(with: .init(type: .transaction,
+                                              name: "Duna Sports",
+                                              value: "R$ 450,00"))
     }
 }
