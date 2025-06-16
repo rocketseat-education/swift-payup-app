@@ -9,19 +9,25 @@ import Foundation
 import UIKit
 
 final class HomeView: UIView {
+    
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
+    private let contentView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     let logoImage: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "mainLogo"))
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-    
-    let mockCompanies = [
-        CompanyItemModel(name: "Aurora Tech Soluções Digitais"),
-        CompanyItemModel(name: "Veltrix Labs"),
-        CompanyItemModel(name: "Rocketseat"),
-        CompanyItemModel(name: "ApertaAi Replays"),
-    ]
     
     let bellButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -40,9 +46,81 @@ final class HomeView: UIView {
         return imageView
     }()
     
-    let daySelectorView = DaySelectorView()
-    let paymentCardView = PaymentCardView()
+    let daySelectorView: DaySelectorView = {
+        let view = DaySelectorView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
+    let paymentCardView: PaymentCardView = {
+        let view = PaymentCardView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let todayLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Hoje"
+        label.font = Fonts.titleSmall()
+        label.textColor = Colors.textHeading
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let addClientsButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Adicionar client", for: .normal)
+        button.titleLabel?.font = Fonts.paragraphMedium()
+        button.backgroundColor = Colors.accentBrand
+        button.layer.cornerRadius = 8
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private let transactionLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Lançamentos"
+        label.font = Fonts.titleSmall()
+        label.textColor = Colors.textHeading
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let transactionDateLabel: UILabel = {
+        let label = UILabel()
+        label.text = "01 de abril"
+        label.font = Fonts.titleSmall()
+        label.textColor = Colors.textHeading
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let filterButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Filtrar", for: .normal)
+        button.titleLabel?.font = Fonts.paragraphMedium()
+        button.setTitleColor(Colors.textHeading, for: .normal)
+        button.tintColor = Colors.textHeading
+        button.backgroundColor = Colors.backgroundSecondary
+        button.layer.cornerRadius = 6
+        button.semanticContentAttribute = .forceRightToLeft
+        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -4)
+        button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+        return button
+    }()
+    
+    private let companyListView: CompanyListView = {
+        let companies = [
+            CompanyItemModel(name: "Aurora Tech Soluções Digitais"),
+            CompanyItemModel(name: "Veltrix Labs"),
+            CompanyItemModel(name: "Rocketseat"),
+            CompanyItemModel(name: "ApertaAi Replays"),
+        ]
+        let view = CompanyListView(companies: companies)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+       
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
