@@ -11,7 +11,7 @@ import UIKit
 final class PaymentCardView: UIView {
     
     private let iconImageView: UIImageView = {
-       let imageView = UIImageView(image: UIImage(named: "calendarDollar"))
+       let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = Colors.accentOrange
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -20,7 +20,6 @@ final class PaymentCardView: UIView {
     
     private let subtitleLable: UILabel = {
         let label = UILabel()
-        label.text = "A receber"
         label.font = Fonts.paragraphSmall()
         label.textColor = Colors.textSpan
         label.translatesAutoresizingMaskIntoConstraints = false
