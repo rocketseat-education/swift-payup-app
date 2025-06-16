@@ -91,8 +91,12 @@ final class PaymentCardView: UIView {
         ])
     }
     
-    func configure(name: String, value: String) {
-        nameLable.text = name
-        valueLable.text = value
+    func configure(with model: PaymentCardModel) {
+        let image = UIImage(named: model.type.iconName)
+        
+        iconImageView.image = image
+        subtitleLable.text = model.type.subtitle
+        nameLable.text = model.name
+        valueLable.text = model.value
     }
 }
