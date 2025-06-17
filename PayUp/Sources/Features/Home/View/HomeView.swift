@@ -18,6 +18,7 @@ final class HomeView: UIView {
     
     private let contentView: UIView = {
         let view = UIView()
+        view.layoutMargins = UIEdgeInsets(top: 16, left: 24, bottom: 24, right: 24)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -147,6 +148,7 @@ final class HomeView: UIView {
     private let transactionCardView: PaymentCardView = {
         let card = PaymentCardView()
         card.translatesAutoresizingMaskIntoConstraints = false
+        card.heightAnchor.constraint(equalToConstant: 95).isActive = true
         return card
     }()
     
@@ -208,6 +210,7 @@ final class HomeView: UIView {
             companySectionStack,
             companyListView,
             transactionHeaderStack,
+            transactionDateLabel,
             transactionCardView,
         ])
         stackView.axis = .vertical
@@ -231,6 +234,7 @@ final class HomeView: UIView {
         backgroundColor = Colors.backgroundPrimary
         addSubview(scrollView)
         scrollView.addSubview(contentView)
+        contentView.addSubview(mainStack)
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: topAnchor),
@@ -243,90 +247,13 @@ final class HomeView: UIView {
             contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
             
-            contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
+            contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+            
+            mainStack.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
+            mainStack.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+            mainStack.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
+            mainStack.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor),
         ])
-        
-        setupViewsOnScroll()
-        
-        NSLayoutConstraint.activate([
-            logoImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            logoImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-            logoImage.widthAnchor.constraint(equalToConstant: 82),
-            logoImage.heightAnchor.constraint(equalToConstant: 24),
-            
-            profileImage.centerYAnchor.constraint(equalTo: logoImage.centerYAnchor),
-            profileImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
-            profileImage.heightAnchor.constraint(equalToConstant: 44),
-            profileImage.widthAnchor.constraint(equalToConstant: 44),
-            
-            bellButton.centerYAnchor.constraint(equalTo: logoImage.centerYAnchor),
-            bellButton.trailingAnchor.constraint(equalTo: profileImage.leadingAnchor, constant: -24),
-            bellButton.heightAnchor.constraint(equalToConstant: 24),
-            bellButton.widthAnchor.constraint(equalToConstant: 24),
-            
-            daySelectorView.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 55),
-            daySelectorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-            daySelectorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
-            daySelectorView.heightAnchor.constraint(equalToConstant: 32),
-            
-            todayLabel.topAnchor.constraint(equalTo: daySelectorView.bottomAnchor, constant: 24),
-            todayLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-            
-            paymentCardView.topAnchor.constraint(equalTo: todayLabel.bottomAnchor, constant: 8),
-            paymentCardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-            paymentCardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
-            paymentCardView.heightAnchor.constraint(equalToConstant: 95),
-            
-            addClientButton.topAnchor.constraint(equalTo: paymentCardView.bottomAnchor, constant: 16),
-            addClientButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-            addClientButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
-            addClientButton.heightAnchor.constraint(equalToConstant: 48),
-            
-            viewAllButton.topAnchor.constraint(equalTo: addClientButton.bottomAnchor, constant: 24),
-            viewAllButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
-            viewAllButton.heightAnchor.constraint(equalToConstant: 21),
-            
-            companyListView.topAnchor.constraint(equalTo: viewAllButton.bottomAnchor, constant: 16),
-            companyListView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-            companyListView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
-            companyListView.heightAnchor.constraint(equalToConstant: 141),
-            
-            transactionLabel.topAnchor.constraint(equalTo: companyListView.bottomAnchor, constant: 24),
-            transactionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-            
-            filterButton.centerYAnchor.constraint(equalTo: transactionLabel.centerYAnchor),
-            filterButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
-            filterButton.heightAnchor.constraint(equalToConstant: 40),
-            
-            transactionDateLabel.topAnchor.constraint(equalTo: transactionLabel.bottomAnchor, constant: 16),
-            transactionDateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-            
-            transactionCardView.topAnchor.constraint(equalTo: transactionDateLabel.bottomAnchor, constant: 8),
-            transactionCardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-            transactionCardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
-            transactionCardView.heightAnchor.constraint(equalToConstant: 95),
-            
-            transactionCardView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24)
-        ])
-    }
-    
-    private func setupViewsOnScroll() {
-        let views: [UIView] = [
-            logoImage,
-            bellButton,
-            profileImage,
-            daySelectorView,
-            todayLabel,
-            paymentCardView,
-            addClientButton,
-            viewAllButton,
-            companyListView,
-            transactionLabel,
-            filterButton,
-            transactionDateLabel,
-            transactionCardView
-        ]
-        views.forEach { contentView.addSubview($0) }
     }
     
     private func setupCollectionView() {
