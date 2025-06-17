@@ -22,9 +22,23 @@ final class HomeView: UIView {
         return view
     }()
     
+    private lazy var headerStack: UIStackView = {
+        let spacer = UIView()
+        let stackView = UIStackView(arrangedSubviews: [logoImage, spacer, bellButton, profileImage])
+        stackView.setCustomSpacing(24, after: bellButton)
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     let logoImage: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "mainLogo"))
         imageView.contentMode = .scaleAspectFit
+        NSLayoutConstraint.activate([
+            imageView.widthAnchor.constraint(equalToConstant: 82),
+            imageView.heightAnchor.constraint(equalToConstant: 24)
+        ])
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -33,6 +47,10 @@ final class HomeView: UIView {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "bell"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: 24),
+            button.heightAnchor.constraint(equalToConstant: 24)
+        ])
         button.tintColor = Colors.textHeading
         return button
     }()
@@ -43,18 +61,27 @@ final class HomeView: UIView {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 16
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageView.widthAnchor.constraint(equalToConstant: 44),
+            imageView.heightAnchor.constraint(equalToConstant: 44)
+        ])
         return imageView
     }()
     
     let daySelectorView: DaySelectorView = {
         let view = DaySelectorView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            view.heightAnchor.constraint(equalToConstant: 32)
+        ])
         return view
     }()
     
     let paymentCardView: PaymentCardView = {
         let card = PaymentCardView()
         card.translatesAutoresizingMaskIntoConstraints = false
+        card.heightAnchor.constraint(equalToConstant: 95).isActive = true
         return card
     }()
     
@@ -67,6 +94,16 @@ final class HomeView: UIView {
         return label
     }()
     
+    private lazy var todayStack: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+            todayLabel, paymentCardView
+        ])
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     private let addClientButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Adicionar cliente", for: .normal)
@@ -75,6 +112,7 @@ final class HomeView: UIView {
         button.backgroundColor = Colors.accentBrand
         button.layer.cornerRadius = 8
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: 48).isActive = true
         return button
     }()
     
@@ -102,21 +140,7 @@ final class HomeView: UIView {
         button.titleLabel?.font = Fonts.titleSmall()
         button.setTitleColor(Colors.accentBrand, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    private let filterButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Filtrar", for: .normal)
-        button.titleLabel?.font = Fonts.paragraphMedium()
-        button.setTitleColor(Colors.textHeading, for: .normal)
-        button.tintColor = Colors.textHeading
-        button.backgroundColor = Colors.backgroundSecondary
-        button.layer.cornerRadius = 6
-        button.semanticContentAttribute = .forceRightToLeft
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -4)
-        button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
-        button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: 24).isActive = true
         return button
     }()
     
@@ -134,10 +158,64 @@ final class HomeView: UIView {
             CompanyItemModel(name: "ApertaAi Replays"),
         ]
         let view = CompanyListView(companies: companies)
+        view.heightAnchor.constraint(equalToConstant: 144).isActive = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-       
+    
+    private lazy var companySectionStack: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+            UIView(), viewAllButton
+        ])
+        stackView.axis = .horizontal
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private let filterButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Filtrar", for: .normal)
+        button.titleLabel?.font = Fonts.paragraphMedium()
+        button.setTitleColor(Colors.textHeading, for: .normal)
+        button.setImage(UIImage(systemName: "line.horizontal.3.decrease.circle"), for: .normal)
+        button.tintColor = Colors.textHeading
+        button.backgroundColor = Colors.backgroundSecondary
+        button.layer.cornerRadius = 6
+        button.semanticContentAttribute = .forceRightToLeft
+        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -4)
+        button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        return button
+    }()
+    
+    private lazy var transactionHeaderStack: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+            transactionLabel, UIView(), filterButton
+        ])
+        stackView.alignment = .center
+        stackView.axis = .horizontal
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var mainStack: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+            headerStack,
+            daySelectorView,
+            todayStack,
+            addClientButton,
+            companySectionStack,
+            companyListView,
+            transactionHeaderStack,
+            transactionCardView,
+        ])
+        stackView.axis = .vertical
+        stackView.spacing = 24
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
