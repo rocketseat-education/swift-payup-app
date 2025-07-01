@@ -9,6 +9,9 @@ import Foundation
 import UIKit
 
 final class HomeView: UIView {
+    var onTapAddClient: (() -> Void)?
+    
+    // MARK: - Scroll + Container
     
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -32,6 +35,8 @@ final class HomeView: UIView {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
+    
+    // MARK: - Subviews
     
     let logoImage: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "mainLogo"))
@@ -114,6 +119,7 @@ final class HomeView: UIView {
         button.layer.cornerRadius = 8
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        button.addTarget(self, action: #selector(didTapAddClient), for: .touchUpInside)
         return button
     }()
     
@@ -267,5 +273,10 @@ final class HomeView: UIView {
         transactionCardView.configure(with: .init(type: .transaction,
                                               name: "Duna Sports",
                                               value: "R$ 450,00"))
+    }
+    
+    @objc
+    private func didTapAddClient() {
+        onTapAddClient?()
     }
 }

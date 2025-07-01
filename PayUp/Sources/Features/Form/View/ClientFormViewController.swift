@@ -37,6 +37,12 @@ final class ClientFormViewController: UIViewController {
         guard !hasInitializedPosition else { return }
         
         hasInitializedPosition = true
-        contentView.containerView?.transform = CGAffineTransform(translationX: 0, y: contentView.containerView?.transform = .identity)
+//        contentView.containerView?.transform = CGAffineTransform(translationX: 0, y: contentView.containerView?.transform = .identity)
+    }
+}
+
+extension ClientFormViewController: ClientFormViewDelegate {
+    func didTapCancel() {
+        //
     }
 }
