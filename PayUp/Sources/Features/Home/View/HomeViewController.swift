@@ -27,6 +27,7 @@ final class HomeViewController: UIViewController {
             let formViewController = ClientFormViewController(mode: .add)
             formViewController.modalTransitionStyle = .coverVertical
             formViewController.modalPresentationStyle = .overFullScreen
+            self.present(formViewController, animated: true)
         }
     }
 }

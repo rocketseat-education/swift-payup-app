@@ -37,7 +37,15 @@ final class ClientFormViewController: UIViewController {
         guard !hasInitializedPosition else { return }
         
         hasInitializedPosition = true
-//        contentView.containerView?.transform = CGAffineTransform(translationX: 0, y: contentView.containerView?.transform = .identity)
+        contentView.containerView.transform = CGAffineTransform(translationX: 0,
+                                                                 y: contentView.containerView.bounds.height)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        UIView.animate(withDuration: 0.3) {
+            self.contentView.containerView.transform = .identity
+        }
     }
 }
 
