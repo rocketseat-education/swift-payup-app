@@ -59,21 +59,11 @@ final class DaySelectorView: UIView {
     
     private func setupButtons() {
         for (index, day) in viewModel.days.enumerated() {
-            var configuration = UIButton.Configuration.filled()
-            configuration.title = day
-            configuration.baseBackgroundColor = Colors.backgroundTertiary
-            configuration.baseForegroundColor = Colors.textHeading
-            configuration.cornerStyle = .fixed
-            configuration.contentInsets = .zero
-            
-            configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
-                var outgoing = incoming
-                outgoing.font = Fonts.titleExtraSmall()
-                return outgoing
-            }
-            
-            let button = UIButton(configuration: configuration, primaryAction: nil)
-            button.translatesAutoresizingMaskIntoConstraints = false
+            let button = UIButton(type: .system)
+            button.setTitle(day, for: .normal)
+            button.setTitleColor(Colors.textHeading, for: .normal)
+            button.backgroundColor = Colors.backgroundTertiary
+            button.titleLabel?.font = Fonts.titleExtraSmall()
             button.layer.cornerRadius = 6
             button.layer.borderWidth = 1
             button.layer.borderColor = UIColor.clear.cgColor
@@ -81,6 +71,7 @@ final class DaySelectorView: UIView {
             button.widthAnchor.constraint(greaterThanOrEqualToConstant: 48).isActive = true
             button.tag = index
             button.addTarget(self, action: #selector(dayTapped(_:)), for: .touchUpInside)
+            button.translatesAutoresizingMaskIntoConstraints = false
             buttons.append(button)
             stackView.addArrangedSubview(button)
         }
@@ -97,6 +88,7 @@ final class DaySelectorView: UIView {
             let isSelected = (i == index)
             button.configuration?.baseForegroundColor = isSelected ? Colors.accentBrand : Colors.textHeading
             button.layer.borderColor = isSelected ? Colors.accentBrand.cgColor : UIColor.clear.cgColor
+            button.setTitleColor(isSelected ? Colors.accentBrand : Colors.textHeading, for: .normal)
         }
     }
 }
