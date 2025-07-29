@@ -28,6 +28,8 @@ final class ClientFormView: UIView {
         return label
     }()
     
+    private lazy var valueField = CurrencyTextField(title: "Valor", placeholder: "R$ 0,00")
+    
     init(mode: ClientFormMode) {
         self.mode = mode
         super.init(frame: .zero)
@@ -53,7 +55,8 @@ final class ClientFormView: UIView {
     
     private func setupStack() {
         let formStack = UIStackView(arrangedSubviews: [
-            titleLabel
+            titleLabel,
+            valueField
         ])
         
         formStack.axis = .vertical
