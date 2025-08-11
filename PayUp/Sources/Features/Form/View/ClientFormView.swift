@@ -87,7 +87,7 @@ final class ClientFormView: UIView {
     private lazy var saveButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(mode == .add ? "Salvar" : "Salvar alterações", for: .normal)
-        button.setTitleColor(Colors.textLabel, for: .normal)
+        button.setTitleColor(Colors.backgroundPrimary, for: .normal)
         button.titleLabel?.font = Fonts.titleSmall()
         button.backgroundColor = Colors.accentBrand
         button.layer.cornerRadius = 8
@@ -129,10 +129,44 @@ final class ClientFormView: UIView {
     }
     
     private func setupStack() {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = false
+        
+        let recurringContainer = UIView()
+        let recurringStack = UIStackView(arrangedSubviews: [
+            recurringLabel,
+            recurringSwitch,
+            frequencyButton
+        ])
+        recurringStack.axis = .horizontal
+        recurringStack.spacing = 8
+        recurringStack.alignment = .center
+        recurringStack.translatesAutoresizingMaskIntoConstraints = false
+        recurringContainer.addSubview(recurringStack)
+        
+        let buttonStack = UIStackView()
+        if mode == .edit {
+            buttonStack.addArrangedSubview(deleteButton)
+        }
+        buttonStack.addArrangedSubview(cancelButton)
+        buttonStack.addArrangedSubview(saveButton)
+        buttonStack.axis = .horizontal
+        buttonStack.spacing = 12
+        buttonStack.distribution = .fillEqually
+
         let formStack = UIStackView(arrangedSubviews: [
             titleLabel,
             valueField,
-            dateField
+            dateField,
+            recurringContainer,
+//            daySelectorView,
+            clientNameField,
+            contactField,
+            phoneField,
+            cnpjField,
+            addressField,
+            buttonStack
         ])
         
         formStack.axis = .vertical
@@ -147,6 +181,13 @@ final class ClientFormView: UIView {
             formStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             formStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             formStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            recurringStack.topAnchor.constraint(equalTo: recurringContainer.topAnchor),
+            recurringStack.leadingAnchor.constraint(equalTo: recurringContainer.leadingAnchor),
+            recurringStack.trailingAnchor.constraint(equalTo: recurringContainer.trailingAnchor),
+            recurringStack.bottomAnchor.constraint(equalTo: recurringContainer.bottomAnchor)
         ])
     }
 }
