@@ -37,6 +37,7 @@ final class DatePickerTextField: UIView {
         textField.setLeftPaddingPoints(12)
         textField.rightView = calendarButton
         textField.rightViewMode = .always
+        textField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         
         calendarButton.addAction(.init(handler: {
             [weak self] _ in
@@ -91,6 +92,11 @@ final class DatePickerTextField: UIView {
         if let viewController = self.parentViewController() {
             viewController.present(alert, animated: true)
         }
+    }
+    
+    @objc
+    private func textDidChange() {
+        maskDate()
     }
     
     private func maskDate() {
