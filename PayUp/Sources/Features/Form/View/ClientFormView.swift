@@ -64,6 +64,7 @@ final class ClientFormView: UIView {
     
     private var selectedFrequency = "Mensalmente"
     
+    private let daySelectorView = DaySelectorView()
     private lazy var clientNameField = InputTextFieldView(title: "Nome do cliente", placeholder: "Ex: Joao Silva", type: .normal)
     private lazy var contactField = InputTextFieldView(title: "Contato", placeholder: "Ex: joao.silva@exemplo.com", type: .normal)
     private lazy var phoneField = InputTextFieldView(title: "Telefone", placeholder: "Ex: (31) 91234-5678", type: .cellphone)
@@ -110,6 +111,7 @@ final class ClientFormView: UIView {
         super.init(frame: .zero)
         backgroundColor = Colors.backgroundPrimary
         setupView()
+        setupInitialState()
     }
     
     required init?(coder: NSCoder) {
@@ -161,7 +163,7 @@ final class ClientFormView: UIView {
             valueField,
             dateField,
             recurringContainer,
-//            daySelectorView,
+            daySelectorView,
             clientNameField,
             contactField,
             phoneField,
@@ -186,6 +188,7 @@ final class ClientFormView: UIView {
             formStack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             formStack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             formStack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            formStack.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
             cancelButton.heightAnchor.constraint(equalToConstant: 44),
             saveButton.heightAnchor.constraint(equalToConstant: 44)
@@ -209,12 +212,13 @@ final class ClientFormView: UIView {
     private func setupActions() {
         recurringSwitch.addTarget(self, action: #selector(recurringToggled), for: .valueChanged)
         frequencyButton.addTarget(self, action: #selector(frequencyTapped), for: .touchUpInside)
-
+        cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
+        saveButton.addTarget(self, action: #selector(saveTapped), for: .touchUpInside)
     }
     
     @objc
     private func recurringToggled() {
-//        daySelectorView.isHidden = !recurringSwitch.isOn
+        daySelectorView.isHidden = !recurringSwitch.isOn
         frequencyButton.isHidden = !recurringSwitch.isOn
     }
     
