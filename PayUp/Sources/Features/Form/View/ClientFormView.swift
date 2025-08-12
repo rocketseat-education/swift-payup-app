@@ -129,6 +129,7 @@ final class ClientFormView: UIView {
     }
     
     private func setupStack() {
+        setupActions()
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsVerticalScrollIndicator = false
@@ -171,17 +172,31 @@ final class ClientFormView: UIView {
         
         formStack.axis = .vertical
         formStack.spacing = 16
-        formStack.isLayoutMarginsRelativeArrangement = true
-        formStack.layoutMargins = UIEdgeInsets(top: 12, left: 24, bottom: 24, right: 24)
         formStack.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(formStack)
+        containerView.addSubview(scrollView)
         
-        containerView.addSubview(formStack)
         NSLayoutConstraint.activate([
-            formStack.topAnchor.constraint(equalTo: containerView.topAnchor),
-            formStack.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            formStack.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            formStack.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+            scrollView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
+            scrollView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 24),
+            scrollView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -24),
+            scrollView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -24),
+            
+            formStack.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            formStack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            formStack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            formStack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            
+            cancelButton.heightAnchor.constraint(equalToConstant: 44),
+            saveButton.heightAnchor.constraint(equalToConstant: 44)
         ])
+        
+        if mode == .edit {
+            NSLayoutConstraint.activate([
+                deleteButton.heightAnchor.constraint(equalToConstant: 44),
+                deleteButton.widthAnchor.constraint(equalToConstant: 44)
+            ])
+        }
         
         NSLayoutConstraint.activate([
             recurringStack.topAnchor.constraint(equalTo: recurringContainer.topAnchor),
@@ -189,5 +204,63 @@ final class ClientFormView: UIView {
             recurringStack.trailingAnchor.constraint(equalTo: recurringContainer.trailingAnchor),
             recurringStack.bottomAnchor.constraint(equalTo: recurringContainer.bottomAnchor)
         ])
+    }
+    
+    private func setupActions() {
+        recurringSwitch.addTarget(self, action: #selector(recurringToggled), for: .valueChanged)
+        frequencyButton.addTarget(self, action: #selector(frequencyTapped), for: .touchUpInside)
+
+    }
+    
+    @objc
+    private func recurringToggled() {
+//        daySelectorView.isHidden = !recurringSwitch.isOn
+        frequencyButton.isHidden = !recurringSwitch.isOn
+    }
+    
+    @objc
+    private func frequencyTapped() {
+        let alert = UIAlertController(title: "Frequência", message: "Selecione a frequência de cobrança", preferredStyle: .actionSheet)
+        
+        for option in frequencyOptions {
+            let action = UIAlertAction(title: option, style: .default) { [weak self] _ in
+                self?.selectedFrequency = option
+                self?.frequencyButton.setTitle(option, for: .normal)
+            }
+            alert.addAction(action)
+        }
+        alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel))
+        
+        if let viewController = self.parentViewController() {
+            viewController.present(alert, animated: true)
+        }
+    }
+    
+    @objc
+    private func cancelTapped() {
+        delegate?.didTapCancel()
+    }
+    
+    @objc
+    private func saveTapped() {
+        delegate?.didTapSave()
+    }
+    
+    @objc
+    private func deleteTapped() {
+        delegate?.didTapDelete()
+    }
+    
+    private func setupInitialState() {
+        daySelectorView.isHidden = !recurringSwitch.isOn
+        frequencyButton.isHidden = !recurringSwitch.isOn
+        
+        if mode == .edit {
+            populateFieldsForEditMode()
+        }
+    }
+    
+    private func populateFieldsForEditMode() {
+        
     }
 }
