@@ -88,7 +88,7 @@ final class DatePickerTextField: UIView {
             self.textField.text = dateFormatter.string(from: picker.date)
         })
         
-        if let viewController = self.presentViewController() {
+        if let viewController = self.parentViewController() {
             viewController.present(alert, animated: true)
         }
     }
