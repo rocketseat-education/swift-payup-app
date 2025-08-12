@@ -109,4 +109,44 @@ final class DatabaseManager {
         sqlite3_finalize(statement)
         return clients
     }
+    
+    func getClients(by id: Int) -> Client? {
+        let querySQL = "SELECT * FROM clients WHERE id = ?"
+        var statement: OpaquePointer?
+        var clients: [Client] = []
+        
+        if sqlite3_prepare_v2(db, querySQL, -1, &statement, nil) == SQLITE_OK {
+            if sqlite3_step(statement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(statement, 0))
+                let name = String(cString: sqlite3_column_text(statement, 1))
+                let contact = String(cString: sqlite3_column_text(statement, 2))
+                let phone = String(cString: sqlite3_column_text(statement, 3))
+                let cnpj = String(cString: sqlite3_column_text(statement, 4))
+                let address = String(cString: sqlite3_column_text(statement, 5))
+                let value = sqlite3_column_double(statement, 6)
+                let dueDate = String(cString: sqlite3_column_text(statement, 7))
+                let isRecurring = sqlite3_column_int(statement, 8) == 1
+                let frequency = String(cString: sqlite3_column_text(statement, 9))
+                let selectedDay = sqlite3_column_type(statement, 10) != SQLITE_NULL ? Int(sqlite3_column_int(statement, 10)) : nil
+                
+                sqlite3_finalize(statement)
+                
+                return Client(
+                    id: id,
+                    name: name,
+                    contact: contact,
+                    phone: phone,
+                    cnpj: cnpj,
+                    address: address,
+                    value: value,
+                    dueDate: dueDate,
+                    isRecurring: isRecurring,
+                    frequency: frequency,
+                )
+            }
+        }
+        
+        sqlite3_finalize(statement)
+        return nil
+    }
 }

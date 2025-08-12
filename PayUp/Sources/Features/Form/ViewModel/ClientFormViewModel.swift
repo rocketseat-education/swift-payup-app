@@ -21,4 +21,8 @@ final class ClientFormViewModel {
     func getAllClients() -> [Client] {
         return databaseManager.getClients()
     }
+    
+    func getClientById(id: Int) -> Client? {
+        return databaseManager.getClients(by: id)
+    }
 }
