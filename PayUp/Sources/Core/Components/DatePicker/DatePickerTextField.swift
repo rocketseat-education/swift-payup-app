@@ -93,6 +93,31 @@ final class DatePickerTextField: UIView {
         }
     }
     
+    private func maskDate() {
+        guard let text = textField.text else {
+            return
+        }
+        
+        let cleanDate = text.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+        let mask = "##/##/####"
+        textField.text = applyMask(mask: mask, to: cleanDate)
+    }
+    
+    private func applyMask(mask: String, to value: String) -> String {
+        var result = ""
+        var index = value.startIndex
+        for ch in mask where index < value.endIndex {
+            if ch == "#" {
+                result.append(value[index])
+                index = value.index(after: index)
+            } else {
+                result.append(ch)
+            }
+        }
+        
+        return result
+    }
+    
     func setText(_ text: String) {
         self.textField.text = text
     }
