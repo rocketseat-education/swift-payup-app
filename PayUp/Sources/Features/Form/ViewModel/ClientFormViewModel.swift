@@ -11,10 +11,6 @@ final class ClientFormViewModel {
     private let databaseManager = DatabaseManager.shared
     
     func saveClient(client: Client) {
-//        let cleanValue = value?.replacingOccurrences(of: "R$", with: "").replacingOccurrences(of: ",", with: "")
-        
-        let doubleValue = Double(cleanValue) ?? 0.0
-        
         return databaseManager.saveClient(client)
     }
     
@@ -24,5 +20,9 @@ final class ClientFormViewModel {
     
     func getClientById(id: Int) -> Client? {
         return databaseManager.getClients(by: id)
+    }
+    
+    func deleteClient(id: Int) -> Bool {
+        return databaseManager.deleteClient(by: id)
     }
 }
