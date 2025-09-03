@@ -149,4 +149,20 @@ final class DatabaseManager {
         sqlite3_finalize(statement)
         return nil
     }
+    
+    func deleteClient(by id: Int) -> Bool {
+        let deleteSQL = "DELETE FROM clients WHERE id = ?"
+        var statement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, deleteSQL, -1, &statement, nil) == SQLITE_OK {
+            sqlite3_bind_int(statement, 1, Int32(id))
+            
+            if sqlite3_step(statement) == SQLITE_DONE {
+                sqlite3_finalize(statement)
+                return true
+            }
+        }
+        sqlite3_finalize(statement)
+        return false
+    }
 }
