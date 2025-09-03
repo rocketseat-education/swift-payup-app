@@ -47,7 +47,7 @@ final class DatabaseManager {
         }
     }
     
-    func saveClient(_ client: Client) {
+    func saveClient(_ client: Client) -> Bool {
         let insertSQL = "INSERT INTO clients (name, contact, phone, cnpj, address, value, due_date, is_recurring, frequency, selected_day) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         var statement: OpaquePointer?
         
@@ -58,8 +58,8 @@ final class DatabaseManager {
             sqlite3_bind_text(statement, 4, client.cnpj, -1, nil)
             sqlite3_bind_text(statement, 5, client.address, -1, nil)
             sqlite3_bind_double(statement, 6, client.value)
-            sqlite3_bind_text(statement, 8, client.dueDate, -1, nil)
-            sqlite3_bind_int(statement, 7, client.isRecurring ? 1 : 0)
+            sqlite3_bind_text(statement, 7, client.dueDate, -1, nil)
+            sqlite3_bind_int(statement, 8, client.isRecurring ? 1 : 0)
             sqlite3_bind_text(statement, 9, client.frequency, -1, nil)
             
             if let day = client.selectedDay {
@@ -67,7 +67,15 @@ final class DatabaseManager {
             } else {
                 sqlite3_bind_null(statement, 10)
             }
+            
+            if sqlite3_step(statement) == SQLITE_DONE {
+                sqlite3_finalize(statement)
+                return true
+            }
         }
+        
+        sqlite3_finalize(statement)
+        return false
     }
     
     func getClients() -> [Client] {
