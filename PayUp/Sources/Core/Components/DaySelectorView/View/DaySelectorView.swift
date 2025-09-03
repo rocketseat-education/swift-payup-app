@@ -92,4 +92,8 @@ final class DaySelectorView: UIView {
             button.setTitleColor(isSelected ? Colors.accentBrand : Colors.textHeading, for: .normal)
         }
     }
+    
+    func getSelectedDay() -> Int? {
+        return viewModel.getSelectedDay()
+    }
 }
