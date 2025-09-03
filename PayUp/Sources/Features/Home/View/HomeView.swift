@@ -159,13 +159,7 @@ final class HomeView: UIView {
     }()
     
     private let companyListView: CompanyListView = {
-        let companies = [
-            CompanyItemModel(name: "Aurora Tech Soluções Digitais"),
-            CompanyItemModel(name: "Veltrix Labs"),
-            CompanyItemModel(name: "Rocketseat"),
-            CompanyItemModel(name: "ApertaAi Replays"),
-        ]
-        let view = CompanyListView(companies: companies)
+        let view = CompanyListView(companies: [])
         view.heightAnchor.constraint(equalToConstant: 144).isActive = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -229,7 +223,7 @@ final class HomeView: UIView {
         super.init(frame: frame)
         setupView()
         
-        setupPaymentCard()
+        setupContent()
     }
     
     required init?(coder: NSCoder) {
@@ -261,15 +255,13 @@ final class HomeView: UIView {
             mainStack.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor),
         ])
     }
+
+    // MARK: - Content
     
-    private func setupCollectionView() {
-        // vai ser aqui no futuro
-    }
-    
-    private func setupPaymentCard() {
-        paymentCardView.configure(with: .init(type: .incoming,
-                                              name: "Aurora Tech Soluções Digitais",
-                                              value: "R$ 250,00"))
+    private func setupContent() {
+//        paymentCardView.configure(with: .init(type: .incoming,
+//                                              name: "Aurora Tech Soluções Digitais",
+//                                              value: "R$ 250,00"))
         transactionCardView.configure(with: .init(type: .transaction,
                                               name: "Duna Sports",
                                               value: "R$ 450,00"))
@@ -278,5 +270,21 @@ final class HomeView: UIView {
     @objc
     private func didTapAddClient() {
         onTapAddClient?()
+    }
+    
+    // MARK: - Public Methods
+    
+    func updateCompanyList(companies: [CompanyItemModel]) {
+        companyListView.updateCompanies(companies)
+    }
+    
+    func updateTodayValue(value: String) {
+        paymentCardView.configure(
+            with: .init(
+                type: .incoming,
+                name: "Recebimentos de hoje",
+                value: value
+            )
+        )
     }
 }
