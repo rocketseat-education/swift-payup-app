@@ -287,4 +287,8 @@ final class HomeView: UIView {
             )
         )
     }
+    
+    func setCompanyListDelegate(_ delegate: CompanyListViewDelegate) {
+        companyListView.delegate = delegate
+    }
 }
