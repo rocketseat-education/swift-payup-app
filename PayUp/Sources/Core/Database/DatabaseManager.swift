@@ -63,8 +63,8 @@ final class DatabaseManager {
             sqlite3_bind_text(statement, 4, NSString(string: client.cnpj).utf8String, -1, nil)
             sqlite3_bind_text(statement, 5, NSString(string: client.address).utf8String, -1, nil)
             sqlite3_bind_double(statement, 6, client.value)
-            sqlite3_bind_text(statement, 8, NSString(string: client.dueDate).utf8String, -1, nil)
-            sqlite3_bind_int(statement, 7, client.isRecurring ? 1 : 0)
+            sqlite3_bind_text(statement, 7, NSString(string: client.dueDate).utf8String, -1, nil)
+                 sqlite3_bind_int(statement, 8, client.isRecurring ? 1 : 0)
             sqlite3_bind_text(statement, 9, NSString(string: client.frequency).utf8String, -1, nil)
             
             if let day = client.selectedDay {

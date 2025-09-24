@@ -57,12 +57,18 @@ final class CompanyListView: UIView {
 }
 
 extension CompanyListView: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
+    -> Int {
         return viewModel.companies.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CompanyCell.identifier, for: indexPath) as? CompanyCell else {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
+    -> UICollectionViewCell
+    {
+        guard
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: CompanyCell.identifier, for: indexPath) as? CompanyCell
+        else {
             return UICollectionViewCell()
         }
         
@@ -72,7 +78,10 @@ extension CompanyListView: UICollectionViewDataSource {
 }
 
 extension CompanyListView: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(
+        _ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
         return CGSize(width: 128, height: 141)
     }
     

@@ -22,8 +22,12 @@ final class ClientFormView: UIView {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Adicionar cliente"
-        label.text = mode == .add ? "Adicionar cliente" : "Editar cliente"
+        switch mode {
+            case .add:
+            label.text = "Adicionar cliente"
+        case .edit:
+            label.text = "Editar cliente"
+        }
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -87,7 +91,12 @@ final class ClientFormView: UIView {
     
     private lazy var saveButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(mode == .add ? "Salvar" : "Salvar alterações", for: .normal)
+        switch mode {
+            case .add:
+            button.setTitle("Salvar", for: .normal)
+        case .edit:
+            button.setTitle("Salvar alterações", for: .normal)
+        }
         button.setTitleColor(Colors.backgroundPrimary, for: .normal)
         button.titleLabel?.font = Fonts.titleSmall()
         button.backgroundColor = Colors.accentBrand
@@ -149,7 +158,10 @@ final class ClientFormView: UIView {
         recurringContainer.addSubview(recurringStack)
         
         let buttonStack = UIStackView()
-        if mode == .edit {
+        switch mode {
+        case .add:
+            break
+        case .edit:
             buttonStack.addArrangedSubview(deleteButton)
         }
         buttonStack.addArrangedSubview(cancelButton)
@@ -194,7 +206,10 @@ final class ClientFormView: UIView {
             saveButton.heightAnchor.constraint(equalToConstant: 44)
         ])
         
-        if mode == .edit {
+        switch mode {
+        case .add:
+            break
+        case .edit:
             NSLayoutConstraint.activate([
                 deleteButton.heightAnchor.constraint(equalToConstant: 44),
                 deleteButton.widthAnchor.constraint(equalToConstant: 44)
@@ -242,6 +257,13 @@ final class ClientFormView: UIView {
         frequencyButton.addTarget(self, action: #selector(frequencyTapped), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
         saveButton.addTarget(self, action: #selector(saveTapped), for: .touchUpInside)
+        
+        switch mode {
+        case .add:
+            break
+        case .edit:
+            deleteButton.addTarget(self, action: #selector(deleteTapped), for: .touchUpInside)
+        }
     }
     
     @objc
@@ -287,12 +309,30 @@ final class ClientFormView: UIView {
         daySelectorView.isHidden = !recurringSwitch.isOn
         frequencyButton.isHidden = !recurringSwitch.isOn
         
-        if mode == .edit {
-            populateFieldsForEditMode()
+        switch mode {
+        case .add:
+            break
+        case .edit(let client):
+            populateFieldsForEditMode(with: client)
         }
     }
     
-    private func populateFieldsForEditMode() {
+    private func populateFieldsForEditMode(with client: Client) {
+        clientNameField.setText(client.name)
+        contactField.setText(client.contact)
+        phoneField.setText(client.phone)
+        cnpjField.setText(client.cnpj)
+        addressField.setText(client.address)
+        valueField.setValue(client.value)
+        dateField.setText(client.dueDate)
+        recurringSwitch.isOn = client.isRecurring
+        selectedFrequency = client.frequency
+        frequencyButton.setTitle(client.frequency, for: .normal)
         
+        if let selectedDay = client.selectedDay {
+            daySelectorView.selectDay(selectedDay)
+        }
+        
+        recurringToggled()
     }
 }

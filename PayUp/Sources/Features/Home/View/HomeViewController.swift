@@ -56,7 +56,7 @@ final class HomeViewController: UIViewController {
 extension HomeViewController: CompanyListViewDelegate {
     func didSelectCompany(_ company: CompanyItemModel) {
         guard let client = viewModel.getClientByName(company.name) else {
-            print("cliente não encontrado")
+            print("cliente não encontrado para edição")
             return
         }
         
