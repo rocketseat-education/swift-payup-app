@@ -238,7 +238,16 @@ final class ClientFormView: UIView {
         let value = valueField.getValue()
         let selectedDay = daySelectorView.getSelectedDay()
         
+        let clientId: Int?
+        switch mode {
+        case .add:
+            clientId = nil
+        case .edit(let client):
+            clientId = client.id
+        }
+        
         return Client(
+            id: clientId,
             name: name,
             contact: contact,
             phone: phone,
