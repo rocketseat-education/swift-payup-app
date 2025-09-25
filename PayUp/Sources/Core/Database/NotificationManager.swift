@@ -58,6 +58,61 @@ final class NotificationManager {
     }
     
     private func scheduleNotification(for client: Client, on date: Date) {
+        let content = UNMutableNotificationContent()
+        content.title = "Cobrança PayUp"
+        content.body = "Lembrete: Cobrança de \(client.name) - \(client.value)"
+        content.sound = .default
+        content.badge = 1
         
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+        
+        var dateComponents = DateComponents()
+        dateComponents.year = components.year
+        dateComponents.month = components.month
+        dateComponents.day = components.day
+        dateComponents.hour = components.hour
+        dateComponents.minute = components.minute
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        
+        let identifier = "client_\(client.id ?? 0)_\(date.timeIntervalSince1970)"
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Erro ao agendar a notificação: \(error)")
+            } else {
+                print("Sucesso ao agendar notificação")
+            }
+        }
+    }
+    
+    private func calculateNextDate(from date: Date, frequency: String, selectedDay: Int?) -> Date? {
+        let calendar = Calendar.current
+        
+        switch frequency {
+        case "Diariamente":
+            return calendar.date(byAdding: .day, value: 1, to: date)
+        case "Semanalmente":
+            return calendar.date(byAdding: .weekOfYear, value: 1, to: date)
+        case "Mensalmente":
+            if let selectedDay = selectedDay {
+                var components = calendar.dateComponents([.year, .month], from: date)
+                components.month! += 1
+                components.day = selectedDay
+                
+                if components.month! > 12 {
+                    components.year! += 1
+                    components.month! -= 12
+                }
+                
+                return calendar.date(from: components)
+            } else {
+                return calendar.date(byAdding: .month, value: 1, to: date)
+            }
+        default:
+            return nil
+        }
     }
 }
