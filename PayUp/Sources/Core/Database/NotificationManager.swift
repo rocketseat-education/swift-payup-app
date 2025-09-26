@@ -115,4 +115,21 @@ final class NotificationManager {
             return nil
         }
     }
+    
+    func cancelClientReminders(clientId: Int?) {
+        guard let clientId = clientId else { return }
+        
+        UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+            let identifiersToCancel = requests.compactMap { request -> String? in
+                if request.identifier.starts(with: "client_\(clientId)_") {
+                    print(clientId)
+                    return request.identifier
+                }
+                return nil
+            }
+            if !identifiersToCancel.isEmpty {
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiersToCancel)
+            }
+        }
+    }
 }
